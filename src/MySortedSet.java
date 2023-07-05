@@ -81,6 +81,67 @@ public class MySortedSet<T extends Comparable>
             //return false;
         }
 
+        public void delete(Node<T> node)
+        {
+            //Node<T> del = node;
+            //node = node.parent;
+            // Если удаляемый узел является корнем и без потомков, то просто обнуляем его
+            if (node == root && node.isLeaf())
+            {
+                root = null;
+            }
+
+            if (node.left != null)
+            {
+                Node<T> leftMax = getMax(node.left);
+                node.data = leftMax.data;
+                delete(leftMax);
+            }
+            else if (node.right != null)
+            {
+                Node<T> rightMin = getMin(node.right);
+                node.data = rightMin.data;
+                delete(rightMin);
+            }
+            else
+            {
+                if (node.whichSon() == -1) node.parent.left = null;
+                else if (node.whichSon() == 1) node.parent.right = null;
+                node = node.parent;
+                while (node != null)
+                {
+                    node.updateHeight();
+                    node.balance();
+                    node = node.parent;
+                }
+            }
+        }
+
+        boolean isLeaf()
+        {
+            return left == null && right == null;
+        }
+
+        int whichSon()
+        {
+            if (parent == null) return 0;
+            else if (parent.left == this) return -1;
+            else if (parent.right == this) return 1;
+            return 0;
+        }
+
+        Node<T> getMin(Node<T> from)
+        {
+            if (from.left == null) return from;
+            return getMin(from.left);
+        }
+
+        Node<T> getMax(Node<T> from)
+        {
+            if (from.right == null) return from;
+            return getMax(from.right);
+        }
+
         int getHeight(Node<T> node)
         {
             if (node == null) return -1;
@@ -128,7 +189,7 @@ public class MySortedSet<T extends Comparable>
             if (tmp != null) tmp.parent = node.left;
 
             // Обновление высот повёрнутых узлов
-            updateHeight();
+            node.updateHeight();
             node.left.updateHeight();
         }
 
@@ -155,7 +216,7 @@ public class MySortedSet<T extends Comparable>
             if (tmp != null) tmp.parent = node.right;
 
             // Обновление высот повёрнутых узлов
-            updateHeight();
+            node.updateHeight();
             node.right.updateHeight();
         }
 
@@ -259,6 +320,10 @@ public class MySortedSet<T extends Comparable>
                 }
             }
         }
+        private void goTo(Node<T> node)
+        {
+            currentNode = node;
+        }
 
         // "Пронзаем" дерево максимально вниз и влево относительно текущего узла
         void getMin()
@@ -294,6 +359,55 @@ public class MySortedSet<T extends Comparable>
         }
 
         //return false;
+    }
+
+    public void delete(T element)
+    {
+        if (root == null) return;
+
+        Node<T> node = find(root, element);
+        node.delete(node);
+    }
+
+    Node<T> find(Node<T> node, T element)
+    {
+        if (node.data.compareTo(element) == 0) return node;
+
+        // Если искомый элемент меньше текущего
+        if (node.data.compareTo(element) > 0) return find(node.left, element);
+        else if (node.data.compareTo(element) < 0) return find(node.right, element);
+        return null;
+    }
+
+
+    public boolean contains(T element)
+    {
+        if (root == null) return false;
+
+        Node<T> node = find(root, element);
+
+        if (node != null) return true;
+        return false;
+    }
+
+    public MySortedSet<T> subSet(T fromElement, T toElement)
+    {
+        Node<T> from = find(root, fromElement);
+        Node<T> to = find(root, toElement);
+        Iterator<T> iter = iterator();
+        return new MySortedSet();
+    }
+
+    public T first()
+    {
+        if (root == null) return null;
+        return root.getMin(root).data;
+    }
+
+    public T last()
+    {
+        if (root == null) return null;
+        return root.getMax(root).data;
     }
 
     Iterator<T> iterator()
