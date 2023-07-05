@@ -433,7 +433,7 @@ public class MySortedSet<T extends Comparable>
         return root.getMax(root).data;
     }
 
-    Iterator<T> iterator()
+    public Iterator<T> iterator()
     {
         return new MyIterator();
     }
