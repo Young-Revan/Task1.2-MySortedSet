@@ -260,10 +260,17 @@ public class MySortedSet<T extends Comparable>
         // Это поле хранит ссылку на предыдущий узел, при подъёме наверх
         Node<T> pastNode;
 
-        public MyIterator() {
+        public MyIterator()
+        {
             currentNode = root;
             getMin();
         }
+
+        MyIterator(Node<T> position)
+        {
+            currentNode = position;
+        }
+
 
         @Override
         public void remove() {
@@ -320,7 +327,7 @@ public class MySortedSet<T extends Comparable>
                 }
             }
         }
-        private void goTo(Node<T> node)
+        public void goTo(Node<T> node)
         {
             currentNode = node;
         }
@@ -393,9 +400,15 @@ public class MySortedSet<T extends Comparable>
     public MySortedSet<T> subSet(T fromElement, T toElement)
     {
         Node<T> from = find(root, fromElement);
-        Node<T> to = find(root, toElement);
-        Iterator<T> iter = iterator();
-        return new MySortedSet();
+        MyIterator iter = new MyIterator(from);
+        MySortedSet<T> subset = new MySortedSet<T>();
+        while (iter.hasNext())
+        {
+            T el = iter.next();
+            if (el.compareTo(toElement) > 0) break;
+            subset.add(el);
+        }
+        return subset;
     }
 
     public T first()

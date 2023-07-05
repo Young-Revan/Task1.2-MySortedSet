@@ -13,11 +13,18 @@ public class Main
             set.add(random.nextInt(-10000, 10000));
         }*/
 
-        set.add(7);
+        set.add(0);
+        set.add(1);
+        set.add(2);
+        set.add(3);
         set.add(4);
-        set.add(9);
+        set.add(5);
         set.add(6);
+        set.add(7);
         set.add(8);
+        set.add(9);
+
+
 
         set.print();
 
@@ -31,7 +38,7 @@ public class Main
         System.out.print("\n\n");
         set.printAsTree();
 
-        set.delete(9);
+
 
         set.print();
         System.out.print("\n\n");
