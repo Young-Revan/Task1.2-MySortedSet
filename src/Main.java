@@ -40,8 +40,14 @@ public class Main
 
 
 
-        set.print();
+        /*set.print();
         System.out.print("\n\n");
-        set.printAsTree();
+        set.printAsTree();*/
+
+        MySortedSet<Integer> subset = set.tailSet(7);
+        System.out.print("\n\n");
+        subset.print();
+        System.out.print("\n\n");
+        subset.printAsTree();
     }
 }

@@ -411,6 +411,16 @@ public class MySortedSet<T extends Comparable>
         return subset;
     }
 
+    public MySortedSet<T> headSet(T element)
+    {
+        return subSet(first(), element);
+    }
+
+    public MySortedSet<T> tailSet(T element)
+    {
+        return subSet(element, last());
+    }
+
     public T first()
     {
         if (root == null) return null;
